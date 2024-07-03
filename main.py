@@ -1,13 +1,12 @@
 import telebot
 import speech_recognition as sr
-from pydub import AudioSegment
-import ffmpeg
+import soundfile as sf
+# required numpy and soundfile packages
 
 API_TOKEN = 'YOUR_BOT_API_TOKEN'  #  @Advt2024r_bot.
 bot = telebot.TeleBot('7492868065:AAHWEDIXDtemTtxLZtDknYFmivKK8x_7EUw')
 
 user_states = {}
-
 @bot.message_handler(content_types=['voice'])
 def handle_voice(message):
     try:
@@ -17,12 +16,12 @@ def handle_voice(message):
 
         with open("voice_message.ogg", 'wb') as new_file:
             new_file.write(downloaded_file)
-        print("ogg file downloaded. Done!")
-        audio = AudioSegment.from_file("voice_message.ogg",format="ogg")
-        print("ogg file read. Done!")
-        # ffmpeg.input("voice_message.ogg").output("voice_message.wav").run()
-        audio.export("voice_message.wav", format="wav")
-        print("wav file created. Done!")
+            new_file.close()
+        #print("ogg file downloaded. Done!")
+        data, samplerate = sf.read('voice_message.ogg')
+        #print("ogg file opened . Done!")
+        sf.write('voice_message.wav', data, samplerate)
+        #print("wav file created. Done!")
         recognizer = sr.Recognizer()
         with sr.AudioFile("voice_message.wav") as source:
             audio_data = recognizer.record(source)
@@ -36,7 +35,7 @@ def handle_voice(message):
         bot.reply_to(message, f"Распознанный текст: {text}", reply_markup=markup)
 
     except Exception as e:
-        bot.reply_to(message, f"Ошибка: {e}")
+        print(f"Ошибка: {e}")
 
 @bot.callback_query_handler(func=lambda call: call.data == "edit_text")
 def callback_edit_text(call):
