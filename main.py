@@ -17,11 +17,11 @@ def handle_voice(message):
         with open("voice_message.ogg", 'wb') as new_file:
             new_file.write(downloaded_file)
             new_file.close()
-        #print("ogg file downloaded. Done!")
+        #  print("ogg file downloaded. Done!")
         data, samplerate = sf.read('voice_message.ogg')
-        #print("ogg file opened . Done!")
+        #  print("ogg file opened . Done!")
         sf.write('voice_message.wav', data, samplerate)
-        #print("wav file created. Done!")
+        #  print("wav file created. Done!")
         recognizer = sr.Recognizer()
         with sr.AudioFile("voice_message.wav") as source:
             audio_data = recognizer.record(source)
@@ -39,7 +39,8 @@ def handle_voice(message):
 
 @bot.callback_query_handler(func=lambda call: call.data == "edit_text")
 def callback_edit_text(call):
-    bot.send_message(call.message.chat.id, "Введите исправленный текст:")
+    current_text = user_states.get(call.message.chat.id, "")
+    bot.send_message(call.message.chat.id, f"Текущий текст: {current_text}\nВведите исправленный текст:")
 
     bot.register_next_step_handler(call.message, receive_edited_text)
 
@@ -47,5 +48,17 @@ def receive_edited_text(message):
     new_text = message.text
     user_states[message.chat.id] = new_text
     bot.send_message(message.chat.id, f"Обновленный текст: {new_text}")
+
+    # Предложить снова редактировать
+    markup = telebot.types.InlineKeyboardMarkup()
+    edit_button = telebot.types.InlineKeyboardButton(text="Редактировать", callback_data="edit_text")
+    no_button = telebot.types.InlineKeyboardButton(text="Нет", callback_data="no_edit")
+    markup.add(edit_button, no_button)
+    bot.send_message(message.chat.id, "Хотите ещё раз отредактировать текст?", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda call: call.data == "no_edit")
+def callback_no_edit(call):
+    bot.send_message(call.message.chat.id, "Редактирование отменено.")
+
 
 bot.polling(none_stop=True)
