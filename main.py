@@ -1,6 +1,7 @@
 import telebot
 import speech_recognition as sr
 import soundfile as sf
+import pyautogui
 # required numpy and soundfile packages
 
 API_TOKEN = 'YOUR_BOT_API_TOKEN'  #  @Advt2024r_bot.
@@ -28,9 +29,11 @@ def handle_voice(message):
             text = recognizer.recognize_google(audio_data, language="ru-RU")
 
         user_states[message.chat.id] = text
+        pyautogui.write(text)
         markup = telebot.types.InlineKeyboardMarkup()
         edit_button = telebot.types.InlineKeyboardButton(text="Редактировать", callback_data="edit_text")
-        markup.add(edit_button)
+        no_button = telebot.types.InlineKeyboardButton(text="Нет", callback_data="no_edit")
+        markup.add(edit_button, no_button)
 
         bot.reply_to(message, f"Распознанный текст: {text}", reply_markup=markup)
 
@@ -40,7 +43,7 @@ def handle_voice(message):
 @bot.callback_query_handler(func=lambda call: call.data == "edit_text")
 def callback_edit_text(call):
     current_text = user_states.get(call.message.chat.id, "")
-    bot.send_message(call.message.chat.id, f"Текущий текст: {current_text}\nВведите исправленный текст:")
+    bot.send_message(call.message.chat.id, f"Текущий текст: {current_text}\nСкажите новый текст:")
 
     bot.register_next_step_handler(call.message, receive_edited_text)
 
