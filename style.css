@@ -19,12 +19,21 @@ img {
    left:17%;
    border-radius: 20px;
 }
-.card2{
+.card2 {
    width: 400px;
    height: 550px;
    background-color: burlywood;
    border-radius: 60px;
-    position: relative;
-    top: 500px;
-    left: 300px;
+    position: absolute;
+    top: 8px;
+    left: 450px;
+}
+.card3{
+   width: 400px;
+   height: 550px;
+   background-color: burlywood;
+   border-radius: 60px;
+    position: absolute;
+    top: 8px;
+    left: 890px;
 }
