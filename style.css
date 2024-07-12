@@ -1,0 +1,21 @@
+.card{
+   width: 400px;
+   height: 550px;
+   background-color: burlywood;
+   border-radius: 60px;
+}
+.photo {
+   height: 40%;
+   padding: 40px;
+   # padding - это внутренний отступ
+   # Для внешних отступов используется margin
+}
+.info {
+   padding: 10px;
+   height: 40%;
+}
+img {
+   position: relative;
+   left:17%;
+   border-radius: 20px;
+}
