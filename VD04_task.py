@@ -12,16 +12,19 @@ app = Flask(__name__)
 
 
 @app.route("/")
-def main():
+def index():
     return render_template("index.html")
 
 @app.route("/blog/")
 def blog():
     return render_template("blog.html")
-
 @app.route("/contacts/")
 def contacts():
     return render_template("contacts.html")
+
+@app.route("/hero/")
+def main():
+    render_template("hero.html")
 @app.route('/time/')
 def time():
     return "текущее время " + time.ctime()
