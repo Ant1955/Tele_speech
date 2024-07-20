@@ -23,8 +23,8 @@ def contacts():
     return render_template("contacts.html")
 
 @app.route("/hero/")
-def main():
-    render_template("hero.html")
+def hero():
+    return render_template("hero.html")
 @app.route('/time/')
 def time():
     return "текущее время " + time.ctime()
